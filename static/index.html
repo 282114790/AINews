@@ -343,6 +343,9 @@
             <button id="trigger-scrape-btn" onclick="triggerScrape()" style="background: #28a745; margin-left: 10px;">
                 🔄 立即抓取
             </button>
+            <button id="clear-data-btn" onclick="clearData()" style="background: #dc3545; margin-left: 10px;">
+                🗑️ 清空数据
+            </button>
         </div>
         
         <div id="news-container">
@@ -635,10 +638,51 @@
             }, 3000);
         }
         
+        // 清空所有数据
+        async function clearData() {
+            if (!confirm('⚠️ 确定要清空所有新闻数据吗？\n\n此操作不可恢复！')) {
+                return;
+            }
+            
+            const button = document.getElementById('clear-data-btn');
+            const originalText = button.textContent;
+            
+            button.disabled = true;
+            button.textContent = '⏳ 清空中...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/data/clear`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    // 刷新数据
+                    loadStats();
+                    loadNews(1);
+                } else {
+                    throw new Error(result.detail || '清空失败');
+                }
+                
+            } catch (error) {
+                console.error('清空数据失败:', error);
+                showNotification(`❌ 清空失败: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+        
         // 将函数暴露到全局作用域，供onclick使用
         window.applyFiltersAndLoad = applyFiltersAndLoad;
         window.goToPage = goToPage;
         window.triggerScrape = triggerScrape;
+        window.clearData = clearData;
         
         // 初始化 - 确保按顺序加载
         (async function init() {

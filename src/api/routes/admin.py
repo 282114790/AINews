@@ -124,3 +124,32 @@ def get_scrape_status():
             "next_run": "09:00"
         }
 
+
+@router.delete("/data/clear")
+def clear_all_data(db: Session = Depends(get_db)):
+    """
+    清空所有新闻数据（保留数据源和分类配置）
+    """
+    try:
+        from src.models.news import News
+        
+        # 统计当前数据量
+        count = db.query(News).count()
+        
+        # 删除所有新闻
+        db.query(News).delete()
+        db.commit()
+        
+        logger.info(f"已清空 {count} 条新闻数据")
+        
+        return {
+            "success": True,
+            "message": f"已清空 {count} 条新闻数据",
+            "deleted_count": count
+        }
+        
+    except Exception as e:
+        db.rollback()
+        logger.error(f"清空数据失败: {e}")
+        raise HTTPException(status_code=500, detail=f"清空数据失败: {str(e)}")
+
