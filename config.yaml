@@ -1,0 +1,243 @@
+# AI News 配置文件
+
+# 数据源配置
+sources:
+  rss:
+    # ═══════════════════════════════════════════════════════════
+    # 🏆 顶级科技媒体（权威性高，更新频繁）
+    # ═══════════════════════════════════════════════════════════
+    - name: "TechCrunch AI"
+      url: "https://techcrunch.com/tag/artificial-intelligence/feed/"
+      enabled: true
+    - name: "VentureBeat AI"
+      url: "https://venturebeat.com/ai/feed/"
+      enabled: true
+    - name: "MIT Technology Review"
+      url: "https://www.technologyreview.com/topic/artificial-intelligence/feed/"
+      enabled: true
+    - name: "The Verge AI"
+      url: "https://www.theverge.com/ai-artificial-intelligence/rss/index.xml"
+      enabled: true
+    - name: "Wired AI"
+      url: "https://www.wired.com/feed/tag/artificial-intelligence/rss"
+      enabled: true
+    - name: "Ars Technica"
+      url: "https://feeds.arstechnica.com/arstechnica/technology-lab"
+      enabled: true
+    - name: "ZDNet AI"
+      url: "https://www.zdnet.com/topic/artificial-intelligence/rss.xml"
+      enabled: true
+    - name: "The Register AI"
+      url: "https://www.theregister.com/software/ai_ml/headlines.atom"
+      enabled: true
+    
+    # ═══════════════════════════════════════════════════════════
+    # 🎯 AI 公司官方博客（一手信息）
+    # ═══════════════════════════════════════════════════════════
+    - name: "OpenAI Blog"
+      url: "https://openai.com/blog/rss.xml"
+      enabled: true
+    - name: "Lil Log (OpenAI研究员)"
+      url: "https://lilianweng.github.io/index.xml"
+      enabled: true  # Lilian Weng的深度技术博客
+    - name: "Google AI Blog"
+      url: "https://blog.google/technology/ai/rss/"
+      enabled: true  # 新地址，可用
+    - name: "Google Research"
+      url: "https://blog.research.google/feeds/posts/default"
+      enabled: true  # Google研究博客
+    - name: "DeepMind Blog"
+      url: "https://www.deepmind.com/blog/rss.xml"
+      enabled: true  # 新地址，可用
+    - name: "Microsoft AI Blog"
+      url: "https://blogs.microsoft.com/ai/feed/"
+      enabled: true  # 微软AI博客
+    - name: "NVIDIA AI Blog"
+      url: "https://blogs.nvidia.com/feed/"
+      enabled: true  # NVIDIA AI博客
+    - name: "Anthropic Blog"
+      url: "https://www.anthropic.com/index.xml"
+      enabled: false  # RSS地址失效
+    
+    # ═══════════════════════════════════════════════════════════
+    # 📚 技术学习（教程、实践）
+    # ═══════════════════════════════════════════════════════════
+    - name: "Towards Data Science"
+      url: "https://towardsdatascience.com/feed"
+      enabled: true  # Medium上最大的数据科学社区
+    - name: "Machine Learning Mastery"
+      url: "https://machinelearningmastery.com/feed/"
+      enabled: true  # 实用ML教程
+    - name: "InfoQ AI/ML"
+      url: "https://feed.infoq.com/ai-ml-data-eng/"
+      enabled: true  # 企业级AI实践
+    - name: "Analytics India"
+      url: "https://analyticsindiamag.com/feed/"
+      enabled: true  # 印度AI生态报道
+    
+    # ═══════════════════════════════════════════════════════════
+    # 🔬 学术和研究
+    # ═══════════════════════════════════════════════════════════
+    - name: "IEEE Spectrum AI"
+      url: "https://spectrum.ieee.org/rss/blog/artificial-intelligence/fulltext"
+      enabled: true
+    - name: "ArXiv AI Papers"
+      url: "http://arxiv.org/rss/cs.AI"
+      enabled: false  # RSS格式有问题
+    - name: "Nature Machine Intelligence"
+      url: "https://www.nature.com/nmachintell.rss"
+      enabled: false  # RSS格式有问题
+    
+    # ═══════════════════════════════════════════════════════════
+    # 💬 社区和产品（趋势发现）
+    # ═══════════════════════════════════════════════════════════
+    - name: "Hacker News AI"
+      url: "https://hnrss.org/newest?q=AI+OR+GPT+OR+LLM&count=30"
+      enabled: true  # 技术社区讨论
+    - name: "Product Hunt AI"
+      url: "https://www.producthunt.com/feed?category=artificial-intelligence"
+      enabled: true  # AI新产品发现
+    - name: "Y Combinator"
+      url: "https://news.ycombinator.com/rss"
+      enabled: false  # 内容太杂，已有HN AI筛选版
+    
+    # ═══════════════════════════════════════════════════════════
+    # 🇨🇳 中文 AI 媒体
+    # ═══════════════════════════════════════════════════════════
+    - name: "机器之心"
+      url: "https://www.jiqizhixin.com/rss"
+      enabled: true  # ⚠️ SSL证书问题，浏览器访问需点击继续
+    - name: "量子位"
+      url: "https://www.qbitai.com/feed"
+      enabled: true  # 国内头部AI媒体
+    - name: "AI科技大本营"
+      url: "https://www.csdn.net/tags/MtTaEg0sMzYyMjQtYmxvZwO0O0O0O0O0O.html/rss"
+      enabled: false  # RSS格式有问题
+    - name: "36氪AI"
+      url: "https://36kr.com/feed/tag/ai"
+      enabled: false  # RSS格式有问题
+  
+  web:
+    # 网页爬虫配置（需要根据实际网站结构调整选择器）
+    - name: "Hacker News"
+      url: "https://news.ycombinator.com/"
+      enabled: false
+      selectors:
+        item: "tr.athing"
+        title: ".titleline > a"
+        link: ".titleline > a"
+        date: ".age"
+    
+    - name: "AI Research Papers"
+      url: "https://paperswithcode.com/"
+      enabled: false
+      selectors:
+        item: ".paper-card"
+        title: "h1 a"
+        link: "h1 a"
+        content: ".paper-abstract"
+
+# 内容处理配置
+processing:
+  # 去重相似度阈值（0-1）
+  deduplication_threshold: 0.85
+  
+  # 分类类别
+  categories:
+    - "技术突破"
+    - "产品发布"
+    - "融资并购"
+    - "政策法规"
+    - "行业动态"
+    - "学术研究"
+    - "人物访谈"
+    - "其他"
+  
+  # 摘要配置
+  summarization:
+    max_length: 200
+    language: "zh-CN"
+    translate_to_chinese: true  # 将英文摘要翻译成中文
+  
+  # 重要性评分权重
+  scoring:
+    source_weight: 0.2      # 来源权重
+    keyword_weight: 0.3     # 关键词权重
+    length_weight: 0.1      # 长度权重
+    recency_weight: 0.2     # 时效性权重
+    engagement_weight: 0.2  # 互动权重（如果有）
+
+# 关键词配置（用于筛选和评分）
+keywords:
+  high_priority:
+    # 英文高优先级关键词
+    - "GPT"
+    - "ChatGPT"
+    - "LLM"
+    - "Large Language Model"
+    - "AGI"
+    - "Artificial General Intelligence"
+    - "Transformer"
+    - "breakthrough"
+    - "milestone"
+    - "Claude"
+    - "Gemini"
+    - "GPT-4"
+    - "GPT-5"
+    # 中文高优先级关键词
+    - "大语言模型"
+    - "通用人工智能"
+    - "突破"
+    - "里程碑"
+    - "文心一言"
+    - "通义千问"
+    - "智谱AI"
+  
+  medium_priority:
+    # 英文中优先级关键词
+    - "AI"
+    - "Artificial Intelligence"
+    - "Machine Learning"
+    - "Deep Learning"
+    - "Neural Network"
+    - "release"
+    - "launch"
+    - "funding"
+    - "acquisition"
+    - "startup"
+    - "research"
+    # 中文中优先级关键词
+    - "人工智能"
+    - "机器学习"
+    - "深度学习"
+    - "神经网络"
+    - "发布"
+    - "融资"
+    - "收购"
+    - "创业公司"
+    - "研究"
+    - "论文"
+
+# 定时任务配置
+scheduler:
+  # 每日采集时间（24小时制）
+  daily_scrape_time: "09:00"
+  
+  # 时区
+  timezone: "Asia/Shanghai"
+  
+  # 是否启用定时任务
+  enabled: true
+
+# API配置
+api:
+  # 每页返回数量
+  page_size: 20
+  
+  # 最大返回数量
+  max_results: 1000
+  
+  # 是否启用缓存
+  cache_enabled: true
+  cache_ttl: 3600  # 缓存时间（秒）
+
