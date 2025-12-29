@@ -123,17 +123,25 @@ class ScrapeTask:
                 # 分类
                 category_id = self.classifier.classify(article)
                 
-                # 生成摘要
-                summary = self.summarizer.summarize(article)
+                # 生成摘要（返回原文和翻译）
+                summary_result = self.summarizer.summarize(article)
+                summary_original = summary_result.get("original", "")
+                summary_translated = summary_result.get("translated")
+                
+                # 翻译标题
+                title_original = article["title"]
+                title_translated = self.summarizer.translate_title(title_original)
                 
                 # 计算重要性评分
                 importance_score = self.scorer.score(article, source_weight=0.2)
                 
                 # 创建新闻记录
                 news = News(
-                    title=article["title"],
+                    title=title_original,
+                    title_translated=title_translated,
                     content=article.get("content", ""),
-                    summary=summary,
+                    summary=summary_original,
+                    summary_translated=summary_translated,
                     url=article["url"],
                     image_url=article.get("image_url"),
                     source_id=source.id,

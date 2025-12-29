@@ -42,8 +42,10 @@ class News(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(500), nullable=False, comment="标题")
+    title_translated = Column(String(500), comment="标题中文翻译")
     content = Column(Text, comment="正文内容")
     summary = Column(Text, comment="摘要")
+    summary_translated = Column(Text, comment="摘要中文翻译")
     url = Column(String(1000), nullable=False, unique=True, comment="原文链接")
     image_url = Column(String(1000), comment="配图URL")
     

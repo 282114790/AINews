@@ -451,20 +451,36 @@
                     };
                     
                     const title = escapeHtml(item.title || '无标题');
+                    const titleTranslated = item.title_translated ? escapeHtml(item.title_translated) : null;
                     const summary = item.summary ? escapeHtml(item.summary) : '';
+                    const summaryTranslated = item.summary_translated ? escapeHtml(item.summary_translated) : null;
                     const category = item.category_name || '未分类';
                     const source = item.source_name || '未知来源';
                     const date = item.published_at ? new Date(item.published_at).toLocaleDateString('zh-CN') : '';
                     const score = item.importance_score ? (item.importance_score * 100).toFixed(0) : '0';
                     const url = item.url || '#';
                     
+                    // 构建标题显示（如果有翻译，显示英文+中文）
+                    let titleHtml = `<a href="${url}" target="_blank">${title}</a>`;
+                    if (titleTranslated) {
+                        titleHtml += `<div class="translation" style="font-size: 0.9em; color: #666; margin-top: 4px; font-weight: normal;">${titleTranslated}</div>`;
+                    }
+                    
+                    // 构建摘要显示（如果有翻译，显示英文+中文）
+                    let summaryHtml = '';
+                    if (summary) {
+                        summaryHtml = `<div class="news-summary">${summary}`;
+                        if (summaryTranslated) {
+                            summaryHtml += `<div class="translation" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee; color: #666; font-size: 0.95em;">${summaryTranslated}</div>`;
+                        }
+                        summaryHtml += '</div>';
+                    }
+                    
                     return `
                         <div class="news-card ${item.is_featured ? 'featured' : ''}">
                             <div class="news-header">
                                 <div style="flex: 1;">
-                                    <h2 class="news-title">
-                                        <a href="${url}" target="_blank">${title}</a>
-                                    </h2>
+                                    <h2 class="news-title">${titleHtml}</h2>
                                     <div class="news-meta">
                                         <span class="badge category">${category}</span>
                                         <span class="badge source">${source}</span>
@@ -474,7 +490,7 @@
                                 </div>
                                 <div class="score">${score}分</div>
                             </div>
-                            ${summary ? `<div class="news-summary">${summary}</div>` : ''}
+                            ${summaryHtml}
                         </div>
                     `;
                 }).join('');

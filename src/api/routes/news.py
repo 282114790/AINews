@@ -18,7 +18,9 @@ class NewsResponse(BaseModel):
     """新闻响应模型"""
     id: int
     title: str
+    title_translated: Optional[str] = None
     summary: Optional[str]
+    summary_translated: Optional[str] = None
     url: str
     image_url: Optional[str]
     source_name: str
@@ -82,7 +84,9 @@ def get_news(
         result.append(NewsResponse(
             id=news.id,
             title=news.title,
+            title_translated=getattr(news, 'title_translated', None),
             summary=news.summary,
+            summary_translated=getattr(news, 'summary_translated', None),
             url=news.url,
             image_url=news.image_url,
             source_name=news.source.name,
@@ -106,7 +110,9 @@ def get_news_detail(news_id: int, db: Session = Depends(get_db)):
     return NewsResponse(
         id=news.id,
         title=news.title,
+        title_translated=getattr(news, 'title_translated', None),
         summary=news.summary,
+        summary_translated=getattr(news, 'summary_translated', None),
         url=news.url,
         image_url=news.image_url,
         source_name=news.source.name,

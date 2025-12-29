@@ -18,37 +18,59 @@ class Summarizer:
         self.max_length = max_length
         self.translate_to_chinese = translate_to_chinese
     
-    def summarize(self, article: Dict) -> str:
+    def summarize(self, article: Dict) -> Dict[str, str]:
         """
-        生成摘要
+        生成摘要（返回原文和翻译）
         
         Args:
             article: 文章字典，包含title和content
             
         Returns:
-            str: 摘要文本（中文）
+            dict: {"original": "原文", "translated": "翻译"} 或 {"original": "原文", "translated": None}
         """
         content = article.get("content", "")
         title = article.get("title", "")
         
         if not content:
-            summary = title[:self.max_length]
+            summary_original = title[:self.max_length]
         elif self.use_ai:
             # 使用AI生成中文摘要
             summary = self._summarize_with_ai(title, content)
             if not summary:
-                summary = self._extract_summary(content)
+                summary_original = self._extract_summary(content)
+            else:
+                summary_original = summary
         else:
             # 简单提取摘要
-            summary = self._extract_summary(content)
+            summary_original = self._extract_summary(content)
         
         # 如果是英文且需要翻译，进行翻译
-        if self.translate_to_chinese and self._is_english(summary):
-            translated = self._translate_to_chinese(summary, title)
-            if translated:
-                return translated
+        summary_translated = None
+        if self.translate_to_chinese and self._is_english(summary_original):
+            summary_translated = self._translate_to_chinese(summary_original, title)
         
-        return summary
+        return {
+            "original": summary_original,
+            "translated": summary_translated
+        }
+    
+    def translate_title(self, title: str) -> Optional[str]:
+        """
+        翻译标题
+        
+        Args:
+            title: 标题文本
+            
+        Returns:
+            str: 翻译后的标题，如果是中文或翻译失败则返回None
+        """
+        if not self.translate_to_chinese:
+            return None
+        
+        if not self._is_english(title):
+            return None
+        
+        return self._translate_to_chinese(title)
     
     def _is_english(self, text: str) -> bool:
         """检测文本是否主要是英文"""
@@ -63,10 +85,38 @@ class Summarizer:
         """将英文翻译成中文"""
         # 优先使用OpenAI翻译
         if self.use_ai:
-            return self._translate_with_ai(text, title)
+            result = self._translate_with_ai(text, title)
+            if result:
+                return result
         
-        # 使用简单的词汇替换（作为备选）
+        # 使用免费的Google翻译API
+        result = self._translate_with_google(text)
+        if result:
+            return result
+        
+        # 最后使用简单的词汇替换（作为备选）
         return self._simple_translate(text)
+    
+    def _translate_with_google(self, text: str) -> Optional[str]:
+        """使用Google翻译（免费）"""
+        try:
+            from deep_translator import GoogleTranslator
+            
+            # 分段翻译（Google翻译有长度限制）
+            if len(text) > 4500:
+                text = text[:4500]
+            
+            translator = GoogleTranslator(source='en', target='zh-CN')
+            translation = translator.translate(text)
+            
+            if translation:
+                logger.debug(f"Google翻译成功: {text[:50]}... -> {translation[:50]}...")
+                return translation[:self.max_length]
+            
+        except Exception as e:
+            logger.debug(f"Google翻译失败: {e}")
+        
+        return None
     
     def _translate_with_ai(self, text: str, title: str = "") -> Optional[str]:
         """使用AI翻译"""
